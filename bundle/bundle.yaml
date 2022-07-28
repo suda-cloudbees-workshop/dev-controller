@@ -1,0 +1,6 @@
+apiVersion: "1"
+version: "1"
+id: "suda-cloudbees-workshop-dev-controller"
+description: "CloudBees CI configuration bundle for the suda-cloudbees-workshop dev-controller Controller"
+availabilityPattern: "cloudbees-ci-casc-workshop/suda-cloudbees-workshop/dev-controller"
+parent: "base"
