@@ -1,0 +1,4 @@
+variables:
+- team: suda-cloudbees-workshop
+- admin-user: Suda97-admin
+- manager-user: Suda97
