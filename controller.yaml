@@ -1,0 +1,71 @@
+removeStrategy:
+  rbac: SYNC
+  items: NONE
+items:
+- kind: folder
+  name: suda-cloudbees-workshop
+  groups:
+  - members:
+      users:
+      - Suda97
+      - Suda97-admin
+    roles:
+    - name: browse
+      grantedAt: current
+    - name: workshop-admin
+      grantedAt: child
+    name: Team Administrators
+  filteredRoles:
+  - workshop-admin
+  - browse
+  items:
+  - kind: managedController
+    name: dev-controller
+    properties:
+    - healthReporting:
+        enabled: true
+    - configurationAsCode:
+        bundle: suda-cloudbees-workshop-dev-controller
+    - optOutProperty:
+        securityEnforcerOptOutMode:
+          authorizationOptOutMode: {
+            }
+    configuration:
+      kubernetes:
+        memory: 4000
+        cpus: 1.0
+        clusterEndpointId: default
+        disk: 10
+        storageClassName: premium-rwo
+        domain: suda-cloudbees-workshop-dev-controller
+        namespace: controllers
+        yaml: |
+          kind: "StatefulSet"
+          spec:
+            template:
+              metadata:
+                labels:
+                  networking/allow-internet-access: "true"
+              spec:
+                containers:
+                - name: "jenkins"
+                  env:
+                  - name: "SECRETS"
+                    value: "/var/jenkins_home/jcasc_secrets"
+                  - name: "GITHUB_ORGANIZATION"
+                    value: "suda-cloudbees-workshop"
+                  - name: "GITHUB_USER"
+                    value: "Suda97"
+                  - name: "GITHUB_APP"
+                    value: "cloudbees-ci-casc-workshop"
+                  - name: "CONTROLLER_SUBDOMAIN"
+                    value: "suda-cloudbees-workshop-dev-controller"
+                  - name: "CASC_BUNDLE_ID"
+                    value: "suda-cloudbees-workshop-dev-controller"
+                  volumeMounts:
+                  - name: "jcasc-secrets"
+                    mountPath: "/var/jenkins_home/jcasc_secrets"
+                volumes:
+                - name: "jcasc-secrets"
+                  secret:
+                    secretName: cbci-mc-secret
